@@ -1,0 +1,16 @@
+[
+{
+  "modid": "chalked",
+  "name": "Chalked",
+  "description": "desc",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["CountryGamer"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["cgo"]
+}
+]
