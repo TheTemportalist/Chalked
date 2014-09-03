@@ -3,6 +3,7 @@ package com.countrygamer.chalked.common.tile
 import java.util
 
 import com.countrygamer.cgo.common.lib.LogHelper
+import com.countrygamer.cgo.common.lib.util.UtilDrops
 import com.countrygamer.cgo.wrapper.common.tile.TEWrapper
 import com.countrygamer.chalked.common.Chalked
 import com.countrygamer.chalked.common.init.CItems
@@ -17,15 +18,17 @@ import net.minecraftforge.oredict.OreDictionary
  *
  * @author CountryGamer
  */
-class TileEntityChalkDust() extends TEWrapper("Chalk Dust") {
+class TEChalkDust() extends TEWrapper("Chalk Dust") {
 
 	private val inputs: util.ArrayList[ItemStack] = new util.ArrayList[ItemStack]()
 	private var chalkCount: Int = 0
 	private var inputColors: Array[Int] = Array[Int](0, 0, 0)
 	private var outputColors: Array[Int] = Array[Int](0, 0, 0)
+	private var outputHex: Int = 0x000000
 	private var leftoverColors: Array[Int] = Array[Int](0, 0, 0)
+	private var shouldBreak: Boolean = false
 
-	def add(itemStack: ItemStack): Boolean = {
+	def add(itemStack: ItemStack, doAdd: Boolean): Boolean = {
 
 		val stack: ItemStack = itemStack.copy()
 		stack.stackSize = 1
@@ -35,24 +38,28 @@ class TileEntityChalkDust() extends TEWrapper("Chalk Dust") {
 		}
 
 		if (stack.getItem == CItems.chalk) {
-			this.inputs.add(stack)
-			this.chalkCount += 1
-			if (stack.hasTagCompound) {
-				val tagCom: NBTTagCompound = stack.getTagCompound
-				val colors: Array[Int] = tagCom.getIntArray("colors")
-				this.inputColors(0) += colors(0)
-				this.inputColors(1) += colors(1)
-				this.inputColors(2) += colors(2)
+			if (doAdd) {
+				this.inputs.add(stack)
+				this.chalkCount += 1
+				if (stack.hasTagCompound) {
+					val tagCom: NBTTagCompound = stack.getTagCompound
+					val colors: Array[Int] = tagCom.getIntArray("colors")
+					this.inputColors(0) += colors(0)
+					this.inputColors(1) += colors(1)
+					this.inputColors(2) += colors(2)
+				}
 			}
 			return true
 		}
 
 		if (this.isDye(stack)) {
-			this.inputs.add(stack)
-			val colors: Array[Int] = Hex.getRGBFromDye(stack)
-			this.inputColors(0) += colors(0)
-			this.inputColors(1) += colors(1)
-			this.inputColors(2) += colors(2)
+			if (doAdd) {
+				this.inputs.add(stack)
+				val colors: Array[Int] = Hex.getRGBFromDye(stack)
+				this.inputColors(0) += colors(0)
+				this.inputColors(1) += colors(1)
+				this.inputColors(2) += colors(2)
+			}
 			return true
 		}
 
@@ -62,43 +69,78 @@ class TileEntityChalkDust() extends TEWrapper("Chalk Dust") {
 	def isDye(itemStack: ItemStack): Boolean = {
 		val oreIDs: Array[Int] = OreDictionary.getOreIDs(itemStack)
 		for (i <- 0 until oreIDs.length) {
-			return OreDictionary.getOreName(oreIDs(i)).contains("dye")
+			if (OreDictionary.getOreName(oreIDs(i)).contains("dye"))
+				return true
 		}
 		false
+	}
+
+	def getInputColors(): Array[Int] = {
+		this.inputColors
+	}
+
+	def getOutputColors(): Array[Int] = {
+		this.outputColors
+	}
+
+	def getOutputColor(): Int = {
+		this.outputHex
+	}
+
+	def getLeftoverColors(): Array[Int] = {
+		this.leftoverColors
+	}
+
+	def setOutputColors(colors: Array[Int]): Unit = {
+		this.outputColors = colors
+		this.outputHex = Hex.toHex(this.outputColors(0), this.outputColors(1), this.outputColors(2))
+		this.calculateLeftovers()
+
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord)
+
+	}
+
+	def calculateLeftovers(): Unit = {
+		this.leftoverColors(0) = this.inputColors(0) - this.outputColors(0)
+		this.leftoverColors(1) = this.inputColors(1) - this.outputColors(1)
+		this.leftoverColors(2) = this.inputColors(2) - this.outputColors(2)
 	}
 
 	override def updateEntity(): Unit = {
 		super.updateEntity()
 
-		this.leftoverColors(0) = this.inputColors(0) - this.outputColors(0)
-		this.leftoverColors(1) = this.inputColors(1) - this.outputColors(1)
-		this.leftoverColors(2) = this.inputColors(2) - this.outputColors(2)
-
-		LogHelper.info(Chalked.pluginName, this.inputs.size() + "")
+		this.calculateLeftovers()
 
 	}
 
 	override def getDrops(drops: util.ArrayList[ItemStack], block: Block,
 			metadata: Int): Unit = {
 		drops.clear()
-		drops.addAll(this.inputs)
+		if (this.shouldBreak)
+			drops.addAll(this.inputs)
 
 	}
 
-	def make(drops: util.ArrayList[ItemStack]): Unit = {
+	def make(): Unit = {
+		val drops: util.ArrayList[ItemStack] = new util.ArrayList[ItemStack]()
+
 		var chalkToDrop: Int = this.chalkCount
 
-		val chalk: ItemStack = new ItemStack(CItems.chalk, 1, 0)
-		var tagCom: NBTTagCompound = new NBTTagCompound()
+		//
+		val output: ItemStack = new ItemStack(CItems.chalk, 1, 0)
+		val outputTag: NBTTagCompound = new NBTTagCompound()
 
-		HexHelper.setHex(tagCom, this.outputColors(0), this.outputColors(1), this.outputColors(2))
+		HexHelper.setHex(
+			outputTag, this.outputColors(0), this.outputColors(1), this.outputColors(2)
+		)
 
-		chalk.setTagCompound(tagCom)
-		drops.add(chalk)
-
+		output.setTagCompound(outputTag)
+		drops.add(output)
 		chalkToDrop -= 1
-		chalk.setTagCompound(null)
-		tagCom = new NBTTagCompound()
+		this.logAr("", this.outputColors, "")
+		LogHelper.info(Chalked.pluginName,
+			"Adding stack with hex " + Hex.toHexString(output.getTagCompound.getInteger("hex")))
+		//
 
 		var colors: Array[Int] = null
 		// iterate for each of RGB
@@ -106,27 +148,31 @@ class TileEntityChalkDust() extends TEWrapper("Chalk Dust") {
 			// Store the leftover as a variable for iteration
 			var leftoverColor: Int = this.leftoverColors(i)
 			// Have to iterate in case the leftover is greater than 256
-			while (leftoverColor > -1) {
+			while (chalkToDrop > 0 && leftoverColor > -1) {
 				colors = Array[Int](0, 0, 0)
 				colors(i) = leftoverColor
 
-				HexHelper.setHex(tagCom, colors(0), colors(1), colors(2))
+				val leftover: ItemStack = new ItemStack(CItems.chalk, 1, 0)
+				val leftoverTag: NBTTagCompound = new NBTTagCompound()
+				HexHelper.setHex(leftoverTag, colors(0), colors(1), colors(2))
 
-				chalk.setTagCompound(tagCom)
-				drops.add(chalk)
+				leftover.setTagCompound(leftoverTag)
+				drops.add(leftover)
 
 				chalkToDrop -= 1
 				leftoverColor -= 256
-
-				chalk.setTagCompound(null)
-				tagCom = new NBTTagCompound()
 			}
 		}
 
 		while (chalkToDrop > 0) {
-			drops.add(chalk)
+			drops.add(new ItemStack(CItems.chalk, 1, 0))
 			chalkToDrop -= 1
 		}
+
+		UtilDrops.spawnDrops(this.worldObj, this.xCoord, this.yCoord, this.zCoord, drops)
+
+		this.shouldBreak = false
+		this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)
 	}
 
 	override def writeToNBT(tagCom: NBTTagCompound): Unit = {
@@ -142,6 +188,7 @@ class TileEntityChalkDust() extends TEWrapper("Chalk Dust") {
 
 		tagCom.setInteger("chalkCount", this.chalkCount)
 		tagCom.setIntArray("inputColors", this.inputColors)
+		//this.logAr("output write", this.outputColors, "")
 		tagCom.setIntArray("outputColors", this.outputColors)
 		tagCom.setIntArray("leftoverColors", this.leftoverColors)
 
@@ -159,8 +206,14 @@ class TileEntityChalkDust() extends TEWrapper("Chalk Dust") {
 		this.chalkCount = tagCom.getInteger("chalkCount")
 		this.inputColors = tagCom.getIntArray("inputColors")
 		this.outputColors = tagCom.getIntArray("outputColors")
+		//this.logAr("output read", this.outputColors, "")
 		this.leftoverColors = tagCom.getIntArray("leftoverColors")
 
+	}
+
+	def logAr(pre: String, ar: Array[Int], post: String): Unit = {
+		LogHelper.info(Chalked.pluginName,
+			"\n" + pre + "\n" + ar(0) + "\n" + ar(1) + "\n" + ar(2) + "\n" + post)
 	}
 
 }

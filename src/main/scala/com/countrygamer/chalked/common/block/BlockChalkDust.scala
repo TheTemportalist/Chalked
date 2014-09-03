@@ -3,12 +3,14 @@ package com.countrygamer.chalked.common.block
 import java.util.Random
 
 import com.countrygamer.cgo.wrapper.common.block.BlockWrapperTE
-import com.countrygamer.chalked.common.tile.TileEntityChalkDust
+import com.countrygamer.chalked.common.Chalked
+import com.countrygamer.chalked.common.tile.TEChalkDust
 import net.minecraft.block.material.Material
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.util.AxisAlignedBB
-import net.minecraft.world.World
+import net.minecraft.world.{IBlockAccess, World}
+import net.minecraftforge.fluids.{FluidContainerRegistry, FluidRegistry}
 
 /**
  *
@@ -16,7 +18,7 @@ import net.minecraft.world.World
  * @author CountryGamer
  */
 class BlockChalkDust(mat: Material, pluginID: String, name: String)
-		extends BlockWrapperTE(mat, pluginID, name, classOf[TileEntityChalkDust]) {
+		extends BlockWrapperTE(mat, pluginID, name, classOf[TEChalkDust]) {
 
 	// Default Constructor
 	{
@@ -39,7 +41,11 @@ class BlockChalkDust(mat: Material, pluginID: String, name: String)
 	}
 
 	override def getRenderType: Int = {
-		5
+		com.countrygamer.chalked.client.render.BlockChalkDustRenderer.getRenderId
+	}
+
+	override def colorMultiplier(world: IBlockAccess, x: Int, y: Int, z: Int): Int = {
+		world.getTileEntity(x, y, z).asInstanceOf[TEChalkDust].getOutputColor()
 	}
 
 	override def canPlaceBlockAt(world: World, x: Int, y: Int, z: Int): Boolean = {
@@ -56,7 +62,27 @@ class BlockChalkDust(mat: Material, pluginID: String, name: String)
 
 	override def onBlockActivated(world: World, x: Int, y: Int, z: Int, player: EntityPlayer,
 			side: Int, offsetX: Float, offsetY: Float, offsetZ: Float): Boolean = {
-		world.getTileEntity(x, y, z).asInstanceOf[TileEntityChalkDust].add(player.getHeldItem)
+		var inserted: Boolean = false
+		if (!player.isSneaking) {
+			if (player.getHeldItem != null) {
+				val tile: TEChalkDust = world.getTileEntity(x, y, z).asInstanceOf[TEChalkDust]
+				inserted = tile.add(player.getHeldItem, !world.isRemote)
+				if (FluidContainerRegistry.isFilledContainer(player.getHeldItem) &&
+						FluidContainerRegistry.getFluidForFilledItem(player.getHeldItem).getFluid ==
+								FluidRegistry.WATER) {
+					tile.make()
+					return true
+				}
+				if (inserted)
+					return true
+			}
+		}
+		if (!inserted) {
+			player.openGui(Chalked, Chalked.guiChalkDust, world, x, y, z)
+			true
+		}
+		else
+			false
 	}
 
 }

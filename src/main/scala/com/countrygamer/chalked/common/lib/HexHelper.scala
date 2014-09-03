@@ -17,4 +17,13 @@ object HexHelper {
 		}
 	}
 
+	def cap(n: Int, cap: Int): Int = {
+		if (n > cap) {
+			cap
+		}
+		else {
+			n
+		}
+	}
+
 }

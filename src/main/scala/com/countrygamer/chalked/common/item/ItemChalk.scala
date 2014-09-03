@@ -6,7 +6,7 @@ import com.countrygamer.cgo.common.lib.util.{Cursor, UtilKeys}
 import com.countrygamer.cgo.wrapper.common.item.ItemWrapper
 import com.countrygamer.chalked.common.init.CBlocks
 import com.countrygamer.chalked.common.lib.{Hex, HexHelper}
-import com.countrygamer.chalked.common.tile.TileEntityChalkDust
+import com.countrygamer.chalked.common.tile.TEChalkDust
 import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
@@ -42,7 +42,7 @@ class ItemChalk(pluginID: String, name: String) extends ItemWrapper(pluginID, na
 				world.setBlock(newCoords(0), newCoords(1), newCoords(2),
 					CBlocks.chalkDust)
 				world.getTileEntity(newCoords(0), newCoords(1), newCoords(2))
-						.asInstanceOf[TileEntityChalkDust].add(itemStack)
+						.asInstanceOf[TEChalkDust].add(itemStack, !world.isRemote)
 				return true
 			}
 		}
