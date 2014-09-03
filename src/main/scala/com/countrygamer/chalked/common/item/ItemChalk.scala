@@ -23,6 +23,49 @@ import net.minecraft.world.World
  */
 class ItemChalk(pluginID: String, name: String) extends ItemWrapper(pluginID, name) {
 
+	override def onItemUseFirst(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int,
+			y: Int, z: Int, side: Int, hitX: Float, hitY: Float, hitZ: Float): Boolean = {
+		if (world.isRemote) return false
+		/*
+		if (EnderStorage.isLoaded()) {
+			if (world.getBlock(x, y, z).getClass
+					.isAssignableFrom(EnderStorage.BlockEnderStorage)) {
+				LogHelper.info(Chalked.pluginName, "Hit ender thing")
+				val hit: MovingObjectPosition = RayTracer.retraceBlock(world, player, x, y, z)
+				LogHelper.info(Chalked.pluginName, (hit != null) + "")
+				if (hit != null) {
+					LogHelper.info(Chalked.pluginName, hit.subHit + "")
+					if (hit.subHit >= 1 && hit.subHit <= 3) {
+						val tile: TileEntity = world.getTileEntity(x, y, z)
+						if (itemStack.hasTagCompound) {
+							val hexColor: Int = itemStack.getTagCompound.getInteger("hex")
+							val encryptedHex: Int = EnderStorageManager
+									.getFreqFromColours(Hex.toRGB(hexColor))
+							LogHelper.info(Chalked.pluginName, hexColor + "")
+							LogHelper.info(Chalked.pluginName, Hex.toHexString(hexColor))
+							val currentColors: Array[Int] = EnderStorageManager
+									.getColoursFromFreq(
+							            TileFrequencyOwner.getFreq(tile))
+							if (currentColors(hit.subHit - 1) == encryptedHex) {
+								LogHelper.info(Chalked.pluginName, "same color")
+								return false
+							}
+							else {
+								currentColors(hit.subHit - 1) = encryptedHex
+								TileFrequencyOwner.setFreq(tile, currentColors)
+								if (!player.capabilities.isCreativeMode)
+									player.getHeldItem.stackSize -= 1
+								return true
+							}
+						}
+					}
+				}
+			}
+		}
+		*/
+		false
+	}
+
 	override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int,
 			z: Int, side: Int, offsetX: Float, offsetY: Float, offsetZ: Float): Boolean = {
 		if (world.getBlock(x, y, z) != CBlocks.chalkDust) {
@@ -60,6 +103,7 @@ class ItemChalk(pluginID: String, name: String) extends ItemWrapper(pluginID, na
 	}
 
 	override def getSubItems(item: Item, tab: CreativeTabs, list: util.List[_]): Unit = {
+		list.asInstanceOf[util.List[Any]].add(new ItemStack(item, 1, 0))
 		var tagCom: NBTTagCompound = null
 		for (i <- 0 until 16) {
 			tagCom = new NBTTagCompound

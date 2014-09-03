@@ -33,7 +33,11 @@ object Hex {
 	}
 
 	def toHexString(hex: Integer): String = {
-		String.format("#%06X", hex)
+		String.format("%06X", hex)
+	}
+
+	def toRGB(hex: Int): Array[Int] = {
+		this.toRGB(this.toHexString(hex))
 	}
 
 	def toRGB(hex: String): Array[Int] = {
