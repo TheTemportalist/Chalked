@@ -2,7 +2,6 @@ package com.countrygamer.chalked.common
 
 import com.countrygamer.cgo.common.RegisterHelper
 import com.countrygamer.cgo.wrapper.common.PluginWrapper
-import com.countrygamer.chalked.addon.EnderStorage
 import com.countrygamer.chalked.common.init.{CBlocks, CItems}
 import com.countrygamer.chalked.common.network.PacketSaveColors
 import cpw.mods.fml.common.event._
@@ -50,7 +49,6 @@ object Chalked extends PluginWrapper {
 	@Mod.EventHandler
 	def postInit(event: FMLPostInitializationEvent): Unit = {
 		super.postInitialize(event)
-		EnderStorage.register()
 
 	}
 

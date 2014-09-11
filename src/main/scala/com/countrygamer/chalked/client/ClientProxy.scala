@@ -1,7 +1,7 @@
 package com.countrygamer.chalked.client
 
 import com.countrygamer.chalked.client.gui.GuiChalkDust
-import com.countrygamer.chalked.client.render.BlockChalkDustRenderer
+import com.countrygamer.chalked.client.render.{BlockCamouflageRenderer, BlockChalkDustRenderer}
 import com.countrygamer.chalked.common.tile.TEChalkDust
 import com.countrygamer.chalked.common.{Chalked, CommonProxy}
 import cpw.mods.fml.client.registry.RenderingRegistry
@@ -18,6 +18,7 @@ class ClientProxy() extends CommonProxy() {
 
 	override def registerRender(): Unit = {
 		RenderingRegistry.registerBlockHandler(BlockChalkDustRenderer)
+		RenderingRegistry.registerBlockHandler(BlockCamouflageRenderer)
 
 	}
 

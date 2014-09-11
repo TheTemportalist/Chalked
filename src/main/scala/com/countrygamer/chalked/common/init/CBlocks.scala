@@ -1,12 +1,15 @@
 package com.countrygamer.chalked.common.init
 
+import com.countrygamer.cgo.wrapper.common.block.BlockWrapperTE
 import com.countrygamer.cgo.wrapper.common.registries.BlockRegister
+import com.countrygamer.chalked.client.render.BlockCamouflageRenderer
 import com.countrygamer.chalked.common.Chalked
 import com.countrygamer.chalked.common.block.BlockChalkDust
-import com.countrygamer.chalked.common.tile.TEChalkDust
+import com.countrygamer.chalked.common.tile.{TEChalkDust, TEColored}
 import cpw.mods.fml.common.registry.GameRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.material.{MapColor, Material, MaterialLogic}
+import net.minecraft.world.IBlockAccess
 
 /**
  *
@@ -16,10 +19,13 @@ import net.minecraft.block.material.{MapColor, Material, MaterialLogic}
 object CBlocks extends BlockRegister {
 
 	var chalkDust: Block = null
+	var coloredBlock: Block = null
 
 	override def registerTileEntities(): Unit = {
 		GameRegistry
 				.registerTileEntity(classOf[TEChalkDust], "ChalkDust")
+		GameRegistry
+				.registerTileEntity(classOf[TEColored], "ColoredTE")
 
 	}
 
@@ -32,6 +38,21 @@ object CBlocks extends BlockRegister {
 				}
 			}
 		CBlocks.chalkDust = new BlockChalkDust(mat, Chalked.pluginID, "Chalk Dust")
+		CBlocks.coloredBlock = new
+						BlockWrapperTE(Material.ground, Chalked.pluginID, "Smeared Block",
+							classOf[TEColored]) {
+			override def getRenderType: Int = {
+				BlockCamouflageRenderer.getRenderId
+			}
+
+			override def colorMultiplier(world: IBlockAccess, x: Int, y: Int, z: Int): Int = {
+				world.getTileEntity(x, y, z).asInstanceOf[TEColored].getColor()
+			}
+
+			override def hasTileEntityDrops(metadata: Int): Boolean = {
+				true
+			}
+		}
 
 	}
 
