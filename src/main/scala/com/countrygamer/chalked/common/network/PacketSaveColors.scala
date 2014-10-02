@@ -38,15 +38,7 @@ class PacketSaveColors(var x: Int, var y: Int, var z: Int, var colors: Array[Int
 		)
 	}
 
-	override def handleOnClient(player: EntityPlayer): Unit = {
-		this.handle(player)
-	}
-
-	override def handleOnServer(player: EntityPlayer): Unit = {
-		this.handle(player)
-	}
-
-	def handle(player: EntityPlayer): Unit = {
+	override def handle(player: EntityPlayer): Unit = {
 		player.worldObj.getTileEntity(
 			this.x, this.y, this.z
 		).asInstanceOf[TEChalkDust].setOutputColors(this.colors)
