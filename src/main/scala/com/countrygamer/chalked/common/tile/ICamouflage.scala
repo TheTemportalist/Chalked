@@ -1,6 +1,6 @@
 package com.countrygamer.chalked.common.tile
 
-import com.countrygamer.cgo.common.lib.ItemMeta
+import com.countrygamer.cgo.library.common.lib.ItemMeta
 import net.minecraft.block.Block
 import net.minecraft.nbt.NBTTagCompound
 

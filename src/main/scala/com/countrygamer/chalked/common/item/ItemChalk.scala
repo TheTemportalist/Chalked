@@ -2,7 +2,7 @@ package com.countrygamer.chalked.common.item
 
 import java.util
 
-import com.countrygamer.cgo.common.lib.util.Cursor
+import com.countrygamer.cgo.library.common.utility.Cursor
 import com.countrygamer.cgo.wrapper.common.item.ItemWrapper
 import com.countrygamer.chalked.common.Chalked
 import com.countrygamer.chalked.common.init.CBlocks
@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.{Side, SideOnly}
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.{Item, ItemStack}
+import net.minecraft.util.Vec3
 import net.minecraft.world.World
 
 /**
@@ -23,22 +24,25 @@ class ItemChalk(name: String) extends ItemWrapper(Chalked.pluginID, name) with I
 	override def onItemUse(itemStack: ItemStack, player: EntityPlayer, world: World, x: Int, y: Int,
 			z: Int, side: Int, offsetX: Float, offsetY: Float, offsetZ: Float): Boolean = {
 		if (world.getBlock(x, y, z) != CBlocks.chalkDust) {
-			val newCoords: Array[Int] = Cursor
+			val newCoords: Vec3 = Cursor
 					.getNewCoordsFromSide(x, y, z, side)
 
 			val canEdit: Boolean =
 				player.canPlayerEdit(
-					newCoords(0), newCoords(1), newCoords(2),
+					newCoords.xCoord.toInt, newCoords.yCoord.toInt, newCoords.zCoord.toInt,
 					side, player.getHeldItem
 				)
 			val canPlace: Boolean = CBlocks.chalkDust
 					.canPlaceBlockAt(
-			            world, newCoords(0), newCoords(1), newCoords(2)
+			            world, newCoords.xCoord.toInt, newCoords.yCoord.toInt,
+			            newCoords.zCoord.toInt
 					)
 			if (canEdit && canPlace) {
-				world.setBlock(newCoords(0), newCoords(1), newCoords(2),
+				world.setBlock(newCoords.xCoord.toInt, newCoords.yCoord.toInt,
+					newCoords.zCoord.toInt,
 					CBlocks.chalkDust)
-				world.getTileEntity(newCoords(0), newCoords(1), newCoords(2))
+				world.getTileEntity(newCoords.xCoord.toInt, newCoords.yCoord.toInt,
+					newCoords.zCoord.toInt)
 						.asInstanceOf[TEChalkDust].add(itemStack, !world.isRemote)
 				return true
 			}

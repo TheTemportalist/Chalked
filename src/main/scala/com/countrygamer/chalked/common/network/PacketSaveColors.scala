@@ -1,6 +1,6 @@
 package com.countrygamer.chalked.common.network
 
-import com.countrygamer.cgo.wrapper.common.network.AbstractPacket
+import com.countrygamer.cgo.library.common.nethandler.IPacket
 import com.countrygamer.chalked.common.tile.TEChalkDust
 import io.netty.buffer.ByteBuf
 import net.minecraft.entity.player.EntityPlayer
@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayer
  * @author CountryGamer
  */
 class PacketSaveColors(var x: Int, var y: Int, var z: Int, var colors: Array[Int])
-		extends AbstractPacket {
+		extends IPacket {
 
 	def this() {
 		this(0, 0, 0, null)

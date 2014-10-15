@@ -1,6 +1,6 @@
 package com.countrygamer.chalked.client.render
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler
+import com.countrygamer.cgo.wrapper.client.render.SBRHWrapper
 import net.minecraft.block.Block
 import net.minecraft.client.renderer.{RenderBlocks, Tessellator}
 import net.minecraft.util.IIcon
@@ -11,22 +11,13 @@ import net.minecraft.world.IBlockAccess
  *
  * @author CountryGamer
  */
-object BlockChalkDustRenderer extends ISimpleBlockRenderingHandler {
-
-	override def renderInventoryBlock(block: Block, metadata: Int, modelId: Int,
-			renderer: RenderBlocks): Unit = {
-	}
-
-	override def getRenderId: Int = {
-		// TODO Use origin repository (configed)
-		5000
-	}
+object BlockChalkDustRenderer extends SBRHWrapper(5000) {
 
 	override def shouldRender3DInInventory(modelId: Int): Boolean = {
 		false
 	}
 
-	override def renderWorldBlock(world: IBlockAccess, x: Int, y: Int, z: Int, block: Block,
+	override def render(world: IBlockAccess, x: Int, y: Int, z: Int, block: Block,
 			modelId: Int, renderer: RenderBlocks): Boolean = {
 		val tessellator: Tessellator = Tessellator.instance
 		//val l: Int = world.getBlockMetadata(x, y, z)

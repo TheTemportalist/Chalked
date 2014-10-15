@@ -1,7 +1,7 @@
 package com.countrygamer.chalked.client.gui
 
-import com.countrygamer.cgo.client.gui.GuiScreenWrapper
-import com.countrygamer.cgo.common.network.PacketHandler
+import com.countrygamer.cgo.library.common.nethandler.PacketHandler
+import com.countrygamer.cgo.wrapper.client.gui.GuiScreenWrapper
 import com.countrygamer.chalked.common.Chalked
 import com.countrygamer.chalked.common.lib.{Hex, HexHelper}
 import com.countrygamer.chalked.common.network.PacketSaveColors

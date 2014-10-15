@@ -1,6 +1,6 @@
 package com.countrygamer.chalked.common
 
-import com.countrygamer.cgo.common.RegisterHelper
+import com.countrygamer.cgo.library.common.helpers.RegisterHelper
 import com.countrygamer.cgo.wrapper.common.PluginWrapper
 import com.countrygamer.chalked.common.init.{CBlocks, CItems}
 import com.countrygamer.chalked.common.network.PacketSaveColors
@@ -14,18 +14,20 @@ import cpw.mods.fml.common.{Mod, SidedProxy}
  */
 @Mod(
 	modid = Chalked.pluginID, name = Chalked.pluginName, version = "@PLUGIN_VERSION@",
+	guiFactory = Chalked.clientProxy,
 	modLanguage = "scala",
-	//guiFactory = "com.countrygamer.chalked.client.gui.configFactory.GuiFactory",
-	dependencies = "required-after:Forge@[10.13,);required-after:cgo@[3,);after:EnderStorage@[1.4.5.22,);"
+	dependencies = "required-after:Forge@[10.13,);required-after:cgo@[3.1,);after:EnderStorage@[1.4.5.22,);"
 )
 object Chalked extends PluginWrapper {
 
 	final val pluginID = "chalked"
 	final val pluginName = "Chalked"
+	final val clientProxy = "com.countrygamer.chalked.client.ClientProxy"
+	final val serverProxy = "com.countrygamer.chalked.server.ServerProxy"
 
 	@SidedProxy(
-		clientSide = "com.countrygamer.chalked.client.ClientProxy",
-		serverSide = "com.countrygamer.chalked.common.CommonProxy"
+		clientSide = this.clientProxy,
+		serverSide = this.serverProxy
 	)
 	var proxy: CommonProxy = null
 

@@ -1,8 +1,8 @@
 package com.countrygamer.chalked.common.init
 
+import com.countrygamer.cgo.library.client.render.BlockCamouflageRender
+import com.countrygamer.cgo.library.common.register.BlockRegister
 import com.countrygamer.cgo.wrapper.common.block.BlockWrapperTE
-import com.countrygamer.cgo.wrapper.common.registries.BlockRegister
-import com.countrygamer.chalked.client.render.BlockCamouflageRenderer
 import com.countrygamer.chalked.common.Chalked
 import com.countrygamer.chalked.common.block.BlockChalkDust
 import com.countrygamer.chalked.common.tile.{TEChalkDust, TEColored}
@@ -42,7 +42,7 @@ object CBlocks extends BlockRegister {
 						BlockWrapperTE(Material.ground, Chalked.pluginID, "Smeared Block",
 							classOf[TEColored]) {
 			override def getRenderType: Int = {
-				BlockCamouflageRenderer.getRenderId
+				BlockCamouflageRender.getRenderId
 			}
 
 			override def colorMultiplier(world: IBlockAccess, x: Int, y: Int, z: Int): Int = {

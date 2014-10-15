@@ -2,7 +2,7 @@ package com.countrygamer.chalked.common.tile
 
 import java.util
 
-import com.countrygamer.cgo.common.lib.ItemMeta
+import com.countrygamer.cgo.library.common.lib.ItemMeta
 import com.countrygamer.cgo.wrapper.common.tile.TEWrapper
 import net.minecraft.block.Block
 import net.minecraft.item.ItemStack

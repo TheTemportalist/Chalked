@@ -2,7 +2,7 @@ package com.countrygamer.chalked.common.item
 
 import java.util
 
-import com.countrygamer.cgo.common.lib.util.UtilKeys
+import com.countrygamer.cgo.library.client.utility.Keys
 import com.countrygamer.chalked.common.lib.{Hex, HexHelper}
 import net.minecraft.init.Items
 import net.minecraft.item.{Item, ItemStack}
@@ -49,7 +49,7 @@ trait IColored {
 						EnumChatFormatting.RESET
 			)
 			if (tagCom.hasKey("colors")) {
-				if (!UtilKeys.isShiftKeyDown) {
+				if (!Keys.keyPressed_Shift_Gui()) {
 					list.add(
 						"Hold " +
 								EnumChatFormatting.AQUA +

@@ -2,8 +2,8 @@ package com.countrygamer.chalked.common.tile
 
 import java.util
 
-import com.countrygamer.cgo.common.lib.LogHelper
-import com.countrygamer.cgo.common.lib.util.UtilDrops
+import com.countrygamer.cgo.library.common.lib.LogHelper
+import com.countrygamer.cgo.library.common.utility.Drops
 import com.countrygamer.cgo.wrapper.common.tile.TEWrapper
 import com.countrygamer.chalked.common.Chalked
 import com.countrygamer.chalked.common.init.CItems
@@ -169,7 +169,7 @@ class TEChalkDust() extends TEWrapper("Chalk Dust") {
 			chalkToDrop -= 1
 		}
 
-		UtilDrops.spawnDrops(this.worldObj, this.xCoord, this.yCoord, this.zCoord, drops)
+		Drops.spawnDrops(this.worldObj, this.xCoord, this.yCoord, this.zCoord, drops)
 
 		this.shouldBreak = false
 		this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord)

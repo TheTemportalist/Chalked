@@ -1,7 +1,7 @@
 package com.countrygamer.chalked.common.init
 
-import com.countrygamer.cgo.common.Origin
-import com.countrygamer.cgo.wrapper.common.registries.ItemRegister
+import com.countrygamer.cgo.library.common.Origin
+import com.countrygamer.cgo.library.common.register.ItemRegister
 import com.countrygamer.chalked.common.ChalkRecipe
 import com.countrygamer.chalked.common.item.{ItemChalk, ItemGoo}
 import cpw.mods.fml.common.registry.GameRegistry
