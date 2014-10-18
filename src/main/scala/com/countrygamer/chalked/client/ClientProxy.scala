@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.Vec3
 import net.minecraft.world.World
 
 /**
@@ -28,8 +27,8 @@ class ClientProxy() extends CommonProxy with IModGuiFactory {
 
 	}
 
-	override def getClientElement(ID: Int, player: EntityPlayer, world: World, coord: Vec3,
-			tileEntity: TileEntity): AnyRef = {
+	override def getClientElement(ID: Int, player: EntityPlayer, world: World, x: Int, y: Int,
+			z: Int, tileEntity: TileEntity): AnyRef = {
 		if (ID == Chalked.guiChalkDust && tileEntity.isInstanceOf[TEChalkDust]) {
 			return new GuiChalkDust(tileEntity.asInstanceOf[TEChalkDust])
 		}

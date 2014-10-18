@@ -16,7 +16,7 @@ import cpw.mods.fml.common.{Mod, SidedProxy}
 	modid = Chalked.pluginID, name = Chalked.pluginName, version = "@PLUGIN_VERSION@",
 	guiFactory = Chalked.clientProxy,
 	modLanguage = "scala",
-	dependencies = "required-after:Forge@[10.13,);required-after:cgo@[3.1,);after:EnderStorage@[1.4.5.22,);"
+	dependencies = "required-after:Forge@[10.13,);required-after:cgo@[3.2,);after:EnderStorage@[1.4.5.22,);"
 )
 object Chalked extends PluginWrapper {
 
