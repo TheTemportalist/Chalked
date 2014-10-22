@@ -2,6 +2,7 @@ package com.temportalist.chalked.common.block
 
 import java.util.Random
 
+import com.temportalist.chalked.client.render.BlockChalkDustRenderer
 import com.temportalist.chalked.common.Chalked
 import com.temportalist.chalked.common.tile.TEChalkDust
 import com.temportalist.origin.wrapper.common.block.BlockWrapperTE
@@ -41,7 +42,7 @@ class BlockChalkDust(mat: Material, pluginID: String, name: String)
 	}
 
 	override def getRenderType: Int = {
-		com.countrygamer.chalked.client.render.BlockChalkDustRenderer.getRenderId
+		BlockChalkDustRenderer.getRenderId
 	}
 
 	override def colorMultiplier(world: IBlockAccess, x: Int, y: Int, z: Int): Int = {
