@@ -22,8 +22,8 @@ object Chalked extends PluginWrapper {
 
 	final val pluginID = "chalked"
 	final val pluginName = "Chalked"
-	final val clientProxy = "com.countrygamer.chalked.client.ClientProxy"
-	final val serverProxy = "com.countrygamer.chalked.server.ServerProxy"
+	final val clientProxy = "com.temportalist.chalked.client.ClientProxy"
+	final val serverProxy = "com.temportalist.chalked.server.ServerProxy"
 
 	@SidedProxy(
 		clientSide = this.clientProxy,
